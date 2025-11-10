@@ -1,0 +1,2467 @@
+#This file was created by <magi> Sat May 27 01:02:34 2000
+#LyX 0.12 (C) 1995-1998 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass report
+\begin_preamble
+\usepackage{multicol}
+\newenvironment{Cplusplus}
+        {\small\it\begin{itemize} \item[]}
+        {\end{itemize}\noindent}
+
+\newcommand{\inputcc}[1]{\begin{Cplusplus}\input{#1}\end{Cplusplus}\noindent}
+\end_preamble
+\language english
+\inputencoding latin1
+\fontscheme default
+\graphics default
+\paperfontsize 12
+\spacing single 
+\papersize Custom
+\paperpackage a4
+\use_geometry 1
+\use_amsmath 0
+\paperorientation portrait
+\paperwidth 21cm
+\paperheight 29.7cm
+\leftmargin 2.5cm
+\topmargin 0cm
+\rightmargin 2.5cm
+\bottommargin 4cm
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 2
+\paperpagestyle fancy
+
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+thispagestyle{empty}
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+vspace*{
+\backslash 
+stretch{4}}
+\layout Standard
+\noindent \align center 
+
+\series bold 
+\size largest 
+\noun on 
+Inanna++
+\noun toggle 
+
+\newline 
+A Highly Object-Oriented C++ Library for Artificial Neural Networks
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+vspace*{
+\backslash 
+stretch{6}}
+\layout Right Address
+
+
+\size large 
+Marko A.
+ Grönroos
+\newline 
+Computer Science
+\newline 
+Department of Mathematical Sciences
+\newline 
+University of Turku, 2000
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+vspace*{
+\backslash 
+stretch{1}}
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+pagenumbering{roman}
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+cleardoublepage
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+thispagestyle{empty}
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents
+
+\end_inset 
+
+
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+cleardoublepage
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+raggedbottom
+\layout Standard
+
+
+\latex latex 
+
+\backslash 
+pagenumbering{arabic}
+\layout Chapter
+
+Introduction
+\layout Quotation
+\noindent 
+
+\begin_inset Quotes eld
+\end_inset 
+
+Aiming for universality in an [initial] design is a prescription for a project
+ that will never be completed.
+\begin_inset Quotes erd
+\end_inset 
+
+
+\newline 
+--- Bjarne Stroustrup, The C++ Programming Language, 3rd edition
+\layout Standard
+
+
+\noun on 
+Inanna
+\noun toggle 
+ is a library for neural network computation and learning.
+ It uses the 
+\noun on 
+MagiClib
+\noun toggle 
+ toolkit as its foundation class library.
+\layout Standard
+
+Despite of the Stroustrup's warnings above, we aimed for generality and
+ openness in the design of this library.
+ Being able to reimplement any central parts of the tools is important in
+ scientific research, where we want to test new ideas.
+ In object-oriented programming, adding new parts is done by inheriting
+ from abstract base classes.
+ This is the approach which we use heavily in the libraries.
+\layout Standard
+
+The main motivation for 
+\noun on 
+Inanna
+\noun toggle 
+ has been getting rid of the aging Stuttgart Neural Network Simulator (SNNS).
+ SNNS offers a wide variety of learning algorithms, it has a nice user interface
+, and it is perhaps the most commonly used open source neural training package.
+ There are, however, many problems with SNNS.
+ The most important is its singleton architecture -- there can be only one
+ network instance at a time.
+ In a system where multiple networks are needed, SNNS can't be used without
+ a lot of hassle.
+ There are also some bugs in SNNS that have lasted for years, and which
+ cause occasionally big problems for heavy-duty users.
+ On the other side, SNNS is 
+\emph on 
+very
+\emph toggle 
+ fast.
+ We can't promise even near as good performance with 
+\noun on 
+Inanna
+\noun toggle 
+, because the object-oriented architecture of 
+\noun on 
+Inanna
+\noun toggle 
+ is inherently slower than the singleton architecture of SNNS that uses
+ global variables.
+\layout Section
+
+Sources of documentation
+\layout Standard
+
+This documentation describes the major modules and classes of the 
+\noun on 
+Inanna
+\noun toggle 
+.
+ We use an example-based approach in our presentation; more accurate description
+s of the classes can be found from the source files (RTFS!).
+ Especially the header files are quite well documented.
+ The source files are currently available from URL:
+\layout Quote
+
+
+\emph on 
+http://www.iki.fi/magi/ohjelmointi/
+\layout Standard
+
+This documentation provides just a brief introduction and some tutorial
+ material to the five libraries.
+ More documentation can be found from various simple test projects done
+ with the library.
+ See Appendices for more information.
+\layout Section
+
+Hands-on intro
+\layout Standard
+
+We start by creating a simple neural network: 
+\layout LyX-Code
+
+
+\size small 
+FreeNetwork myNet;
+\layout LyX-Code
+
+
+\size small 
+myNet.setBuilder (new LayeredTopology ("2-2-1"));
+\layout LyX-Code
+
+
+\size small 
+myNet.builder().createNeurons ();
+\layout LyX-Code
+
+
+\size small 
+myNet.builder().connect ();
+\layout LyX-Code
+
+
+\size small 
+myNet.init (0.5); 
+\layout Standard
+
+The network created by this program will have two input units, a hidden
+ layer with two units, and one output unit.
+ 
+\noun on 
+Inanna
+\noun toggle 
+ uses the concept of 
+\emph on 
+topology builders
+\emph toggle 
+ to build and maintain network architectures (topologies).
+ The 
+\emph on 
+connectFull()
+\emph toggle 
+ method consults the builder to connect the successive layers.
+ The 
+\emph on 
+LayeredTopology
+\emph toggle 
+ builder is the default for 
+\emph on 
+FreeNetwork
+\emph toggle 
+, so we can do the above much easier with:
+\layout LyX-Code
+
+
+\size small 
+FreeNetwork myNet ("2-2-1");
+\layout Standard
+
+In this case each layer is automatically connected totally to the successive
+ layer.
+ After the network has been created, it can be trained.
+ We use here the RProp (resilient backpropagation) learning algorithm with
+ parameters 
+\begin_inset Formula \( \Delta _{0}=0.1 \)
+\end_inset 
+
+ (learning speed at the beginning), 
+\begin_inset Formula \( \Delta _{max}=50.0 \)
+\end_inset 
+
+ (maximum learning speed) and 
+\begin_inset Formula \( \alpha =4 \)
+\end_inset 
+
+ (weight decay exponent).
+ In the following example we first set these parameters, then load the training
+ data from a file, and finally train the network for a 1000 training cycles:
+ 
+\layout LyX-Code
+
+
+\size small 
+Trainer* myTrainer = new TrainerLib(
+\begin_inset Quotes eld
+\end_inset 
+
+RProp
+\begin_inset Quotes erd
+\end_inset 
+
+);
+\layout LyX-Code
+
+
+\size small 
+myTrainer->addFeature (new WeightDecay (0.9999));
+\layout LyX-Code
+
+
+\size small 
+myTrainer->setParam (
+\begin_inset Quotes eld
+\end_inset 
+
+eta-
+\begin_inset Quotes erd
+\end_inset 
+
+, 0.1); /* Initial learning speed */
+\layout LyX-Code
+
+
+\size small 
+myTrainer->setParam (
+\begin_inset Quotes eld
+\end_inset 
+
+eta+
+\begin_inset Quotes erd
+\end_inset 
+
+, 50); 
+\protected_separator 
+/* Maximum learning speed */
+\layout LyX-Code
+
+
+\size small 
+myNet.setTrainer (myTrainer);
+\layout LyX-Code
+
+
+\size small 
+PatternSet trainset ("mydata.pat");
+\protected_separator 
+
+\protected_separator 
+/* Read in SNNS format (.pat) */
+\layout LyX-Code
+
+
+\size small 
+myNet.train (trainset, 1000);
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+/* Train for 1000 cycles */
+\layout Standard
+
+The length of the parameter vector depends on the training algorithm.
+\layout Standard
+
+After the neural network has been trained, it can be used to calculate output
+ values from input vectors.
+ In the following example we have the expected output values also in the
+ testing pattern set, which we use to calculate mean squared error (MSE)
+ in relation to the test set: 
+\layout LyX-Code
+
+
+\size small 
+PatternSet testset ("testset.pat");
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\layout LyX-Code
+
+
+\size small 
+// Iterate through the test set
+\layout LyX-Code
+
+
+\size small 
+float sum=0; /* Calculate the sum of squared errors */
+\layout LyX-Code
+
+
+\size small 
+for (int p=0; p<testset.patterns; p++) {
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+// Let the network compute outputs for the test set pattern p
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+Vector outputs = myNet.test (testset, p);
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+for (int i=0; i<outputs.size; i++) {
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+sout.printf ("%f ", outputs[i]); /* Print an output value */
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+// Add the squared error to the sum
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+sum = sum + sqrt (outputs[i] - testset.output(p,i));
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+}
+\layout LyX-Code
+
+
+\size small 
+}
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\layout LyX-Code
+
+
+\size small 
+// Calculate the mean of squared errors (MSE)
+\layout LyX-Code
+
+
+\size small 
+float MSE = sum / (testset.patterns * testset.outputs);
+\layout Standard
+
+The 
+\emph on 
+ANNetwork
+\emph toggle 
+ class provides also a direct method for calculating the MSE in relation
+ to a given pattern set: 
+\layout LyX-Code
+
+
+\size small 
+float MSE = myNet.test (testset); /* Test and calculate MSE */
+\layout Section
+
+Learning features
+\layout Standard
+
+Currently there are no algorithms.
+ The initial version will include:
+\layout Itemize
+
+Vanilla Backpropagation
+\layout Itemize
+
+Backpropagation with momentum
+\layout Itemize
+
+Resilient Backpropagation
+\layout Standard
+
+The algorithms of the library have been valitated by comparing the results
+ with those reported by Prechelt 
+\begin_inset LatexCommand \cite{prechelt:94}
+
+\end_inset 
+
+ with his examples with the 
+\noun on 
+Proben1
+\noun toggle 
+ datasets.
+ Our results were within acceptable limits from the results reported by
+ Prechelt.
+ There were minor differences in the results that were probably caused by
+ implementation-specific undocumented differences in the training algorithms.
+\layout Section
+
+Neural network classes
+\layout Standard
+
+
+\emph on 
+ANNetwork
+\emph toggle 
+ is the base class of all kinds of neural networks.
+ It has interfaces for training and testing neural networks, which the inheritor
+s should implement.
+ The class hierarchy is illustrated in Figure 
+\begin_inset LatexCommand \ref{fig: annlib}
+
+\end_inset 
+
+.
+\begin_float fig 
+\layout Standard
+\align center 
+
+\begin_inset Figure size 386 207
+file kaaviot/simann.eps
+flags 9
+
+\end_inset 
+
+
+\layout Caption
+
+ANNlib top-level class hierarchy
+\begin_inset LatexCommand \label{fig: annlib}
+
+\end_inset 
+
+
+\end_float 
+\layout Standard
+
+Two major neural network classes are currently implemented in the library:
+ 
+\emph on 
+FreeNetwork
+\emph toggle 
+ and 
+\emph on 
+SNNSNetwork
+\emph toggle 
+.
+ The former is ``free'' in the sense that it has very open object-oriented
+ structure; most of its functionalities can easily be replaced with inheritance,
+ etc.
+ The latter of the classes is an interface to the SNNS.
+ Both of the classes inherit the abstract 
+\emph on 
+ANNetwork
+\emph toggle 
+ baseclass.
+\layout Subsection
+
+Network topology builder
+\layout Standard
+
+The 
+\emph on 
+ANNLayering
+\emph toggle 
+ class controls and provides information about the possible layering structure
+ of an 
+\emph on 
+ANNetwork
+\emph toggle 
+.
+ Its main purpose is to handle network descriptions of format 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+33-10-1
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ Pure feedforward networks do not need it.
+ The layering structure of an 
+\emph on 
+ANNetwork
+\emph toggle 
+ can be obtained with the 
+\emph on 
+getLayering()
+\emph toggle 
+ method.
+\layout Section
+
+Design notes
+\layout Standard
+
+Inanna has been developed with heavily object-oriented approach, with total
+ openness in mind.
+ This is important for reuse of the library algorithms.
+\layout Chapter
+
+Network objects
+\layout Standard
+
+A ``free and generic '' network class.
+ It provides a nice object-oriented hierarchy for different network objects.
+ It does not currently contain any training algorithms.
+ It also provides methods for cleaning up useless units and connections,
+ determining visual positioning for the units, drawing an EPS image of the
+ network, etc.
+\layout Section
+
+Training
+\layout Section
+
+Testing
+\layout Section
+
+Redefining networks
+\layout Standard
+
+Sometimes, although hopefully rarely, the standard 
+\emph on 
+FreeNetwork
+\emph toggle 
+ class is not enough.
+ One such case is the 
+\emph on 
+RegulationNet
+\emph toggle 
+, which we will use as an example of redefining the baseclass.
+ Its purpose is to act as a control device, where the control logic is implement
+ed as a neural network.
+ The network topology is inherently recurrent, and the network is executed
+ until the its state reaches one of many possible criteria.
+ Let us begin by defining the header: 
+\latex latex 
+
+\backslash 
+inputcc{c/inanna/network-regulation}
+\latex default 
+ Further details are omitted here.
+ The 
+\emph on 
+RegulationEnv
+\emph toggle 
+ is an interface to get external input to the network during the execution.
+ It is defined simply as: 
+\latex latex 
+
+\backslash 
+inputcc{c/inanna/network-regulationenv}
+\latex default 
+ When called, the implementor of the interface can put any new input values
+ to the network.
+ A reference to the network is passed with the interface method, although
+ the environment typically knows the network already.
+ Output signals are sent back to the environment through the 
+\emph on 
+ActuatingUnit
+\emph toggle 
+s, described below.
+\layout Subsubsection
+
+class 
+\emph on 
+RegulationNet
+\layout Standard
+
+An agent-oriented control network that sends messages to different actuators
+ (defined with 
+\emph on 
+RegulActuator
+\emph toggle 
+ objects) whenever the network state falls into a state subspace defined
+ by the 
+\emph on 
+ActuatingUnit
+\emph toggle 
+ thresholds.
+ As the name may imply, this class was originally made for genetic regulation
+ networks, but it can be used for any control purposes.
+\layout Subsubsection
+
+class
+\emph on 
+ ActuatingUnit
+\layout Standard
+
+A unit that sends a message to the user-inherited 
+\emph on 
+RegulActuator
+\emph toggle 
+ class whenever the activation of the unit exceeds a defined threshold.
+\layout Subsubsection
+
+class
+\emph on 
+ RegulActuator
+\layout Standard
+
+User should redefine the 
+\emph on 
+actuate
+\emph toggle 
+ method of this class to receive messages from 
+\emph on 
+ActuatingUnit
+\emph toggle 
+s.
+\layout Subsection
+
+Redefining neurons
+\layout Standard
+
+The standard neuron used by the 
+\emph on 
+FreeNetwork
+\emph toggle 
+ is 
+\series bold 
+\emph on 
+FreeNeuron
+\series default 
+\emph toggle 
+.
+ Its basic attributes are an activation value, a bias value, and a transfer
+ function.
+ It can also be given three-dimensional coordinates, and it can be disabled
+ with the 
+\emph on 
+enable(false)
+\emph toggle 
+ method.
+ Disabled neurons are not updated and optionally not drawn in graphical
+ representations of the network.
+ Disabled neurons are also purged with the 
+\emph on 
+FreeNetwork
+\emph toggle 
+::
+\emph on 
+cleanup
+\emph toggle 
+ (
+\emph on 
+true
+\emph toggle 
+)} .
+ The following example sets the output layer to use a linear transfer function.
+ 
+\latex latex 
+
+\backslash 
+inputcc{c/inanna/neuron-tf}
+\latex default 
+ If we want to have really different neurons, we must inherit the basic
+ neuron.
+ There are some methods that we are required to implement, for example the
+ default and copy constructors, and a cloning operation.
+ In the following example, we define the 
+\emph on 
+ActuatingUnit
+\emph toggle 
+.
+ It is a unit that is given a pointer to an actuator object.
+ When the activation of the unit exceeds a given threshold, it calls the
+ 
+\emph on 
+actuate
+\emph toggle 
+ method of the actuator object.
+ The purpose is to use recurrent neural networks as control devices.
+
+\latex latex 
+ 
+\backslash 
+inputcc{c/inanna/neuron-actuator}
+\latex default 
+ We can now use the new neuron type to create a network using a neuron template:
+\latex latex 
+ 
+\backslash 
+inputcc{c/inanna/neuron-template}
+\latex default 
+ The connections between neurons are also objects, typically of class 
+\emph on 
+FreeConnection
+\emph toggle 
+.
+ That class can also be inherited in a similar manner to what we did above
+ with the neurons.
+\layout Subsection
+
+An example
+\layout Standard
+
+Suppose we want to create a network with standard sigmoid transfer function,
+ three layers with sizes 33, 10 and 1, of which the last one has linear
+ outputs (no sigmoidal squashing).
+ Consider the following example: 
+\latex latex 
+
+\backslash 
+inputcc{c/inanna/sample1}
+\latex default 
+ The standard logistic activation function is the default so it's not really
+ necessary to set it here.
+ The 
+\begin_inset Quotes eld
+\end_inset 
+
+F
+\begin_inset Quotes erd
+\end_inset 
+
+ in front of the layer description string causes every layer to be fully
+ connected with shortcuts to all successive layers, not just to next one.
+ In the final step we set the learning termination method to 
+\begin_inset Formula \( GL_{5} \)
+\end_inset 
+
+ 
+\begin_inset LatexCommand \cite{prechelt:94}
+
+\end_inset 
+
+.
+ 
+\layout Standard
+
+Now we need to define pattern sets for training and testing.
+ In our example, we split our training data to training and validation sets
+ in 80:20 ratio: 
+\latex latex 
+
+\backslash 
+inputcc{c/inanna/sample2}
+\latex default 
+ Before we can train the network, training parameters must be specified.
+ We'll use Rprop algorithm with parameters 
+\begin_inset Formula \( \Delta _{0}=0.1 \)
+\end_inset 
+
+, 
+\begin_inset Formula \( \Delta _{\max }=50 \)
+\end_inset 
+
+, and 
+\begin_inset Formula \( \alpha =4 \)
+\end_inset 
+
+ (
+\begin_inset Formula \( \alpha  \)
+\end_inset 
+
+ is weight decay exponent).
+ 
+\latex latex 
+
+\backslash 
+inputcc{c/inanna/sample3}
+\latex default 
+ We are now ready to train and test the network.
+
+\latex latex 
+ 
+\backslash 
+inputcc{c/inanna/sample4}
+\latex default 
+ The number of classes is deduced directly from the number of outputs.
+ The 
+\emph on 
+testClassify
+\emph toggle 
+ method is of course applicable only to classification problems.
+\layout Standard
+
+The 
+\emph on 
+PatternSet
+\emph toggle 
+ and 
+\emph on 
+ANNetwork
+\emph toggle 
+ classes provide many other pattern-handling methods as well as nice informative
+ methods for collecting statistics.
+\layout Chapter
+
+Data handling
+\layout Standard
+
+Different types of training and testing data are abstracted behind the 
+\emph on 
+PatternSource
+\emph toggle 
+ superclass.
+ This abstraction makes it possible to have, for example, a dynamic data
+ source, such as a physical device, attached to the neural network.
+ Another common use would be automatic 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\emph on 
+bootstrapping
+\begin_inset Quotes erd
+\end_inset 
+
+
+\emph toggle 
+ of patterns by adding 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\emph on 
+jitter
+\begin_inset Quotes erd
+\end_inset 
+
+
+\emph toggle 
+, i.e., noise with an appropriate distribution (note that this can also be
+ implemented by redefining the 
+\emph on 
+FreeNeuron
+\emph toggle 
+).
+\layout Section
+
+Pattern sources (Class
+\emph on 
+ PatternSource
+\emph toggle 
+)
+\layout Standard
+
+Interface for all generic pattern handling, such as shuffling, copying,
+ joining, selecting certain inputs, etc.
+\layout Subsection
+
+Implementing new pattern set source types
+\layout Section
+
+Pattern sets (Class
+\emph on 
+ PatternSet
+\emph toggle 
+)
+\layout Standard
+
+This is the most common type of pattern sets: a simple array of patterns
+ which consist of respective input and output vectors.
+\layout Standard
+
+FullPattSet contains also methods for equalization of pattern sets (see
+ below).
+\layout Subsubsection
+
+class
+\emph on 
+ ArrayPattSet
+\layout Standard
+
+Useful for teaching time series; pattern is given as a value vector, and
+ the access operations map the vector into a standard pattern set.
+\layout Section
+
+Loading and storing patterns
+\layout Standard
+
+PatternSet has an opaque interface for loading and saving different pattern
+ file types, using the methods 
+\emph on 
+load()
+\emph toggle 
+ and 
+\emph on 
+save()
+\emph toggle 
+.
+\layout LyX-Code
+
+
+\size small 
+PatternSet mySet;
+\layout LyX-Code
+
+
+\size small 
+mySet.load (
+\begin_inset Quotes eld
+\end_inset 
+
+myset.pat
+\begin_inset Quotes erd
+\end_inset 
+
+);
+\layout LyX-Code
+
+
+\size small 
+myset.save (
+\begin_inset Quotes eld
+\end_inset 
+
+myset.pat
+\begin_inset Quotes erd
+\end_inset 
+
+);
+\layout Standard
+
+The file format is determined by file suffix.
+ The toolkit currently supports the following file types: 
+\layout Itemize
+
+
+\family typewriter 
+.pat
+\family default 
+ -- SNNS file format
+\layout Itemize
+
+
+\family typewriter 
+.dt
+\family default 
+ 
+\noun on 
+-- Proben1
+\noun toggle 
+ file format
+\layout Itemize
+
+Other suffixes (such as 
+\family typewriter 
+.dat)
+\family default 
+ -- raw data: number of inputs, outputs and patterns must be specified
+\layout Subsection
+
+Implementing new file formats
+\layout Subsection
+
+Design notes
+\layout Paragraph
+
+Design patterns involved 
+\layout Standard
+
+
+\noun on 
+Strategy
+\noun toggle 
+: data format are different strategies for storing data.
+ 
+\noun on 
+Abstract Factory
+\noun toggle 
+: creation of 
+\emph on 
+DataFormat
+\emph toggle 
+ instances is centralized in 
+\emph on 
+DataFormatLib
+\emph toggle 
+.
+ 
+\noun on 
+Factory Method
+\noun toggle 
+: each file format has a factory method to instantiate 
+\emph on 
+DataFormat
+\emph toggle 
+ objects.
+ 
+\noun on 
+Singleton
+\noun toggle 
+: There is only one instance of 
+\emph on 
+DataFormatLib
+\emph toggle 
+ and the 
+\emph on 
+DataFormat
+\emph toggle 
+ objects.
+\layout Section
+
+Equalization of data
+\layout Standard
+
+
+\emph on 
+PatternSet
+\emph toggle 
+ has two different methods for equalizing the patterns: 
+\emph on 
+histogram
+\emph toggle 
+ 
+\emph on 
+equalization
+\emph toggle 
+ and 
+\emph on 
+gaussian
+\emph toggle 
+ 
+\emph on 
+equalization
+\emph toggle 
+ (see below).
+ These are defined in 
+\family typewriter 
+equalization.h
+\family default 
+.
+\layout Standard
+
+The patterns of a pattern set can be equalized with equalization parameters
+ acquired from the pattern set itself, or with parameters determined for
+ another set.
+ The validation and testing sets are typically equalized with the parameters
+ acquired from the training sets.
+ For example: 
+\layout LyX-Code
+
+
+\size small 
+PatternSet trainset
+\protected_separator 
+ ("trainset.pat"); 
+\layout LyX-Code
+
+
+\size small 
+PatternSet testset 
+\protected_separator 
+ ("testset.pat");
+\layout LyX-Code
+
+
+\protected_separator 
+
+\layout LyX-Code
+
+
+\size small 
+HistogramEqualizer equalizer (10000)
+\layout LyX-Code
+
+
+\size small 
+equalizer.analyze 
+\protected_separator 
+(trainset); /* Analyze the data.
+ */
+\layout LyX-Code
+
+
+\size small 
+equalizer.equalize (trainset); /* Apply to training set.
+ */
+\layout LyX-Code
+
+
+\size small 
+equalizer.equalize (testset); 
+\protected_separator 
+/* Apply to test set.
+ */
+\layout Subsection
+
+Histogram equalization
+\layout Standard
+
+The histogram equalization makes a histogram for each component vector 
+\begin_inset Formula \( \vec{s} \)
+\end_inset 
+
+ of the training pattern set.
+ A histogram 
+\begin_inset Formula \( \vec{h} \)
+\end_inset 
+
+ is formed by counting the number of the vector elements in 
+\begin_inset Formula \( \vec{s} \)
+\end_inset 
+
+ that fall in each slots with domain function
+\begin_inset Formula 
+\begin{equation}
+d(x,\vec{h})=\left\langle |\vec{h}|\cdot \frac{x-\min (\vec{s})}{\max (\vec{s})-\min (\vec{s})}\right\rangle 
+\end{equation}
+
+\end_inset 
+
+where 
+\begin_inset Formula \( \left\langle \right\rangle  \)
+\end_inset 
+
+ denotes taking the integer part of a real value.
+ A typical histogram resolution is 
+\begin_inset Formula \( |\vec{h}|=100000 \)
+\end_inset 
+
+.
+ The histogram is then transformed into a cumulative histogram with
+\begin_inset Formula 
+\begin{equation}
+c_{i}=\sum _{j=1}^{i}h_{i}.
+\end{equation}
+
+\end_inset 
+
+The cumulative histogram can then be used to equalize values with
+\begin_inset Formula 
+\begin{equation}
+q(x,\vec{c})=\min (\vec{s})+(\max (\vec{s})-\min (\vec{s}))\cdot \frac{c_{d(x,\vec{c})}}{|\vec{s}|},
+\end{equation}
+
+\end_inset 
+
+and the original component vector is equalized with
+\begin_inset Formula 
+\begin{equation}
+s_{i}'=q(s_{i},\vec{c}).
+\end{equation}
+
+\end_inset 
+
+ This is done for all the pattern vector components.
+ Other patterns can be equalized using the same equalization vectors.
+\layout Standard
+
+We could imagine that the histogram equalization removes any clustering
+ inside any one vector component, but also makes small variations within
+ the clusters more easily detectable and possibly enhances clusterings within
+ dependent component hypercubes.
+\layout Subsection
+
+Gaussian equalization
+\layout Standard
+
+Mean 
+\begin_inset Formula \( \bar{X} \)
+\end_inset 
+
+ and standard deviation 
+\begin_inset Formula \( \sigma  \)
+\end_inset 
+
+ are calculated for each pattern set vector component set.
+ Values are equalized with
+\begin_inset Formula 
+\begin{equation}
+y_{i}=\frac{x_{i}-\bar{X}}{\sigma }
+\end{equation}
+
+\end_inset 
+
+so that the mean will be 
+\begin_inset Formula \( 0 \)
+\end_inset 
+
+ and the standard deviation 
+\begin_inset Formula \( 1.0 \)
+\end_inset 
+
+.
+ This linear mapping does not lose any inherent clustering inside a single
+ pattern component as the histogram equalization does.
+\layout Subsection
+
+Minmax equalization
+\layout Standard
+
+Scales the data into an explisit range 
+\begin_inset Formula \( [min,max] \)
+\end_inset 
+
+.
+ For example:
+\layout LyX-Code
+
+MinmaxEqualizer eq (0.0, 1.0);
+\layout Subsection
+
+Implementing new equalization methods
+\layout Subsection
+
+Design notes
+\layout Paragraph
+
+Design patterns involved 
+\layout Standard
+
+
+\noun on 
+Strategy
+\noun toggle 
+: equalization methods are strategies for equalizing data.
+\layout Section
+
+Drawing networks
+\layout Standard
+
+The Miller and Kitano encoding methods do not provide two-dimensional coordinate
+s for the neurons, so a drawing algorithm must be used.
+ We introduce below a simple algorithm suitable for drawing feedforward
+ networks:
+\layout Enumerate
+
+Split the hidden units into layers using a simple rule: 
+\begin_inset Formula 
+\[
+layer(i+1)=\left\{ \begin{array}{ll}
+layer(i)+1 & \textrm{if}\, connected(i,i+1),\\
+layer(i) & \textrm{if}\, \neg connected(i,i+1)
+\end{array}\right. \]
+
+\end_inset 
+
+
+\layout Enumerate
+
+Position input and output units according to their index
+\layout Enumerate
+
+Iterate from the first to the last hidden layer: 
+\begin_deeper 
+\layout Enumerate
+
+For each unit in the layer, calculate the ``optimal'' position in the sense
+ that the unit would be positioned at the average y-position of source unit
+ of all connections
+\layout Enumerate
+
+Order the units in the layer according to their ``optimal'' y-positions
+\end_deeper 
+\layout Enumerate
+
+Scale and center and all layers to fit the print area 
+\layout Standard
+
+We implemented this algorithm in the ANN library, and used it in producing
+ the network figures for this work.
+ A major problem with the algorithm can be observed when the network is,
+ for example, connected so that each hidden neuron is connected to the neuron
+ with the successive index value.
+ The hidden neurons are then ordered one neuron per layer, at the center
+ of the layer, and the connections thus overlap each other.
+\layout Section
+
+Design notes on pattern handling
+\layout Chapter
+
+Network creation
+\layout Standard
+
+The network creation is 
+\layout Section
+
+Topology builders
+\layout Standard
+
+In the above hands-on example, we used a description string to define the
+ structure of the MLP network.
+ In the simplest case, we just list the sizes of the layers in the string,
+ including the input layer.
+ Each neuron on a specific layer will be connected to every neuron on the
+ next layer.
+ The 
+\emph on 
+SNNSNetwork
+\emph toggle 
+ has two additions in the description string.
+ The letter ``F'' in the beginning of the string (for example, 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+F2-2-1
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+) will cause every layer to be connected to 
+\emph on 
+every
+\emph toggle 
+ successive layer.
+ The connections that jump over the next layer are often called 
+\emph on 
+shortcut
+\emph toggle 
+ 
+\emph on 
+connections
+\emph toggle 
+.
+ The second addition is that if the size of a layer is followed by letter
+ 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+l
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+ (for example, 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+33-4-2l
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+), linear output function will be used in the neurons of that layer.
+ This is often used with output layer, when we want to have the output values
+ in 
+\begin_inset Formula \( \Re  \)
+\end_inset 
+
+.
+\layout Standard
+
+The description string gives a fast way to create neural networks, but it
+ is not the only way with the 
+\emph on 
+FreeNetwork
+\emph toggle 
+.
+ Next, we create a fully connected recurrent 
+\emph on 
+FreeNetwork
+\emph toggle 
+ network: 
+\layout LyX-Code
+
+
+\size small 
+FreeNetwork myNet; /* Create network */
+\layout LyX-Code
+
+
+\size small 
+myNet.make ();
+\protected_separator 
+ /* Create 100 neurons */
+\layout LyX-Code
+
+
+\size small 
+for (int i=0; i<myNet.size(); i++) /* Every neuron */
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+for (int j=0; j<myNet.size(); j++) /* to every neuron */
+\layout LyX-Code
+
+
+\size small 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+myNet.connect (i, j);
+\layout Standard
+
+This can also be done with the method 
+\emph on 
+connectFull
+\emph toggle 
+().
+\layout Section
+
+Loading and saving network to a file
+\layout Standard
+
+
+\emph on 
+FreeNetwork
+\emph toggle 
+ class does not have such file operations currently.
+ The conversion operations between these two classes are described above
+ for 
+\emph on 
+SNNSNetwork
+\emph toggle 
+.
+\layout Chapter
+
+Training algorithms
+\layout Section
+
+Algorithm library (
+\emph on 
+TrainerLib
+\emph toggle 
+)
+\layout Section
+
+Implementing new algorithms
+\layout Section
+
+Design notes on training algorithms
+\layout Chapter
+
+Early stopping methods
+\layout Standard
+
+
+\emph on 
+ANNetwork
+\emph toggle 
+ handles the 
+\emph on 
+early stopping
+\emph toggle 
+ (termination) regularization during training.
+\layout Standard
+
+Early stopping 
+\begin_inset LatexCommand \cite{bishop:95b,sarle:95,moody:95}
+
+\end_inset 
+
+ is a way of controlling the model complexity by terminating the training
+ when the model begins to overfit to the data.
+ It is also a way for making the training faster, which is important with
+ evolutionary neural networks, where we have to train numerous network topologie
+s during the search to find the best one.
+\layout Standard
+
+The available training patterns are divided into two parts: a 
+\emph on 
+training
+\emph toggle 
+ 
+\emph on 
+set
+\emph toggle 
+ and a 
+\emph on 
+validation
+\emph toggle 
+ 
+\emph on 
+set
+\emph toggle 
+.
+ The training set is used for the actual training of the network.
+ Then, at certain intervals, the network is evaluated with the validation
+ set.
+ The purpose of this is to measure the generalization ability of the network.
+ When the validation error begins to rise significantly, it is seen as a
+ sign of overtraining and the training is terminated.
+ The weight state of the network is stored after each validation test.
+ After the training is terminated.
+ the network state with the lowest validation error is restored.
+\layout Section
+
+Class 
+\emph on 
+Terminator
+\layout Standard
+
+The base class for early stopping methods.
+ Terminators can be constructed easily by description string using the 
+\emph on 
+TerminatorLib::create()
+\emph toggle 
+ function.
+ For example,
+\latex latex 
+ 
+\layout LyX-Code
+
+
+\size small 
+Terminator* arnold = TerminatorLib::create ("GL5", validationSet, 10);
+\layout Standard
+
+creates a 
+\emph on 
+GLTerminator
+\emph toggle 
+ (see below) with termination parameter 
+\begin_inset Formula \( GL_{5} \)
+\end_inset 
+
+.
+\layout Standard
+
+One of the services provided by this base class is calculating the generalizatio
+n loss (GL)
+\begin_inset LatexCommand \cite{prechelt:98}
+
+\end_inset 
+
+.
+ GL is defined as
+\begin_inset Formula 
+\begin{equation}
+GL(t)=100\cdot \left( \frac{E_{va}(t)}{E_{opt}(t)}-1\right) 
+\end{equation}
+
+\end_inset 
+
+ where 
+\begin_inset Formula \( E_{va}(t) \)
+\end_inset 
+
+ is the validation error at training epoch 
+\begin_inset Formula \( t \)
+\end_inset 
+
+ and 
+\begin_inset Formula \( E_{opt}(t)=\min _{t'\leq t}(E_{va}(t')) \)
+\end_inset 
+
+ is the minimum validation error so far.
+ 
+\layout Section
+
+Class 
+\emph on 
+CycleTerminator
+\begin_inset Formula \( \rightarrow  \)
+\end_inset 
+
+Terminator
+\layout Standard
+
+CycleTerminator is the most commonly used method for terminating learning.
+\layout Section
+
+Class 
+\emph on 
+ErrorTerminator
+\begin_inset Formula \( \rightarrow  \)
+\end_inset 
+
+Terminator
+\layout Section
+
+Class 
+\emph on 
+CompoundTerminator
+\begin_inset Formula \( \rightarrow  \)
+\end_inset 
+
+Terminator
+\layout Standard
+
+A terminator consisting of multiple termination criteria.
+\layout Section
+
+Class 
+\emph on 
+TerminatorT800
+\begin_inset Formula \( \rightarrow  \)
+\end_inset 
+
+Terminator
+\layout Standard
+
+A very fast terminator.
+ It is otherwise equal to the UPTerminator, except that it does not restore
+ the best encountered network state.
+\layout Subsection
+
+Class 
+\emph on 
+SavingTerminator
+\begin_inset Formula \( \rightarrow  \)
+\end_inset 
+
+Terminator
+\layout Standard
+
+This is an abstract base class for terminators that restore the best reached
+ network state after termination.
+\layout Subsection
+
+Class 
+\emph on 
+GLTerminator
+\begin_inset Formula \( \rightarrow  \)
+\end_inset 
+
+SavingTerminator
+\layout Standard
+
+This is the GL, or generalization loss termination method, described by
+ Prechelt 
+\begin_inset LatexCommand \cite{prechelt:98}
+
+\end_inset 
+
+.
+ Notion 
+\begin_inset Formula \( GL_{\alpha } \)
+\end_inset 
+
+ means that the training is terminated after 
+\begin_inset Formula \( GL(t)>\alpha  \)
+\end_inset 
+
+.
+ Prechelt has used parameters around 
+\begin_inset Formula \( GL_{2} \)
+\end_inset 
+
+ and 
+\begin_inset Formula \( GL_{5} \)
+\end_inset 
+
+.
+\layout Subsection
+
+Class 
+\emph on 
+PRTerminator
+\begin_inset Formula \( \rightarrow  \)
+\end_inset 
+
+SavingTerminator
+\layout Standard
+
+This is a termination method used in the examples by Prechelt 
+\begin_inset LatexCommand \cite[p. 27]{prechelt:98}
+
+\end_inset 
+
+.
+ Four parameters are needed.
+ First is the GL parameter (typically 2 to 5), second is a training progress
+ minimum threshold parameter (typically 0.1), third is a number of strips
+ (typically 8), and fourth is a GL/P ratio threshold parameter (typically
+ 3).
+ Example: 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+PR5,0.1,8,3
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Subsection
+
+Class 
+\emph on 
+PQTerminator
+\begin_inset Formula \( \rightarrow  \)
+\end_inset 
+
+SavingTerminator
+\layout Standard
+
+Progress quotient (PQ) termination by Prechelt.
+ It has one parameter, termination threshold, ranging typically from 2 to
+ 5.
+ Example: 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+PQ2
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+.
+\layout Subsection
+
+Class 
+\emph on 
+UPTerminator
+\begin_inset Formula \( \rightarrow  \)
+\end_inset 
+
+SavingTerminator
+\layout Standard
+
+UP termination by Prechelt.
+ It stops the learning when the generalization error increases in 
+\emph on 
+n
+\emph toggle 
+ successive strips.
+ Very fast with parameter value 2.
+ Example: 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\family typewriter 
+UP2
+\family default 
+
+\begin_inset Quotes erd
+\end_inset 
+
+.
+\layout Subsection
+
+Design notes
+\layout Paragraph
+
+Design patterns involved 
+\layout Standard
+
+Strategy: different termination methods are implemented as strategies.
+ Abstract
+\series bold 
+ 
+\series default 
+Factory: terminators are constructed by the 
+\emph on 
+TerminatorLib::createTerminator()
+\emph toggle 
+ method.
+ Factory Method: the terminator factory is implemented as factories for
+ each termination method, which are stored in 
+\emph on 
+TerminatorLib
+\emph toggle 
+.
+ Memento: the 
+\emph on 
+SavingTerminator
+\emph toggle 
+ clones the network under training to store its state.
+\layout Chapter
+
+Additional tools
+\layout Standard
+
+We have written some additional tool classes for handling the problem-specific
+ pattern sets and for collecting some statistics.
+ These are located in the 
+\family typewriter 
+neural/proj/comparison
+\family default 
+ directory.
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol5
+13 2 0 0 -1 -1 -1 -1
+1 1 0 0
+1 1 0 0
+0 1 1 0
+0 1 1 0
+0 1 0 0
+0 1 0 0
+0 1 1 0
+0 1 1 0
+0 1 0 0
+0 1 1 0
+0 1 0 0
+0 1 0 0
+0 1 1 0
+8 1 0 "" ""
+2 1 1 "10cm" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 2 0 1 1 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 2 0 1 1 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 2 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 1 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 1 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 1 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 1 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+
+
+\series bold 
+\size footnotesize 
+Class
+\series default 
+
+\newline 
+
+\series bold 
+Description
+\series default 
+
+\newline 
+
+\series bold 
+\emph on 
+ProblemStats
+\series default 
+\emph toggle 
+ 
+\newline 
+Collects statistics for regression (approximation) problems.
+ 
+\newline 
+
+\newline 
+Computes minimum, maximum and average MSEs and variances of MSEs for training,
+ validation and different test sets.
+\newline 
+
+\newline 
+Also computes statistics of training times.
+ Produces reports.
+\newline 
+
+\series bold 
+\emph on 
+ClassificationStats
+\series default 
+\emph toggle 
+
+\newline 
+Provides similar statistics for classification problems.
+\newline 
+
+\series bold 
+\emph on 
+LearningProblem
+\series default 
+\emph toggle 
+
+\newline 
+Superclass for handling different problem datasets.
+
+\size default 
+ 
+\size footnotesize 
+
+\newline 
+
+\newline 
+Provides interfaces for loading training, validation and test pattern sets
+ and for iterating trough different variants.
+
+\size default 
+ 
+\size footnotesize 
+
+\newline 
+
+\newline 
+This way all problem datasets can be evaluated from single interface.
+\newline 
+
+\series bold 
+\emph on 
+ArtificialProblem
+\series default 
+\emph toggle 
+
+\newline 
+Artificial datasets 
+\family typewriter 
+XOR
+\family default 
+, 
+\family typewriter 
+letters
+\family default 
+, 
+\family typewriter 
+encoder
+\family default 
+ and 
+\family typewriter 
+artif32
+\family default 
+.
+\newline 
+
+\newline 
+No variants are available and training, validation and testing sets are
+ equal.
+\newline 
+
+\series bold 
+\emph on 
+Proben1Problem
+\series default 
+\emph toggle 
+
+\newline 
+
+\noun on 
+Proben1
+\noun toggle 
+ problems.
+ Each dataset comes in three different permutations and six different partitioni
+ngs.
+\newline 
+
+\series bold 
+\emph on 
+BankruptcyProblem
+\series default 
+\emph toggle 
+
+\newline 
+The bankruptcy data has three training sets, of sizes 100, 200 and 400.
+
+\size default 
+ 
+\newline 
+
+\newline 
+
+\size footnotesize 
+Its test data has been divided into five different partitionings.
+\layout Chapter
+
+Sample projects
+\layout Section
+
+Validation of the algorithms
+\layout Standard
+
+This example project was used to validate the correctness of the learning
+ algorithms.
+ We compared the results from Inanna with results by Prechelt.
+ We also compared the results to those obtained by using SNNS.
+ We used the 
+\family typewriter 
+heart1a
+\family default 
+ dataset from the 
+\noun on 
+Proben1
+\noun toggle 
+ benchmarking problem set.
+ The network topology was 35 input units, 8 hidden units and 2 output units.
+ Successive layers were fully connected, and non-successive layers were
+ connected with shortcut connections.
+ Each test was done 30 times with random initialization and averaged.
+ All runs used 
+\begin_inset Formula \( GL_{5} \)
+\end_inset 
+
+ early stopping.
+\layout Standard
+\added_space_top 0.3cm \added_space_bottom 0.3cm \align center \LyXTable
+multicol5
+4 7 0 0 -1 -1 -1 -1
+1 1 0 0
+1 1 0 0
+0 1 0 0
+0 1 0 0
+8 1 0 "" ""
+8 1 0 "" ""
+8 1 0 "" ""
+8 1 0 "" ""
+8 1 0 "" ""
+8 1 0 "" ""
+8 1 1 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+0 8 0 1 0 0 0 "" ""
+
+Software
+\newline 
+train error
+\newline 
+train MSE
+\newline 
+valid error
+\newline 
+valid MSE
+\newline 
+test error
+\newline 
+test MSE
+\newline 
+Prechelt
+\newline 
+-
+\newline 
+9.25
+\newline 
+-
+\newline 
+13.22
+\newline 
+19.89
+\newline 
+14.33
+\newline 
+SNNS
+\newline 
+
+\newline 
+
+\newline 
+
+\newline 
+
+\newline 
+
+\newline 
+
+\newline 
+Inanna
+\newline 
+
+\newline 
+
+\newline 
+
+\newline 
+
+\newline 
+
+\newline 
+
+\layout Chapter
+
+Notes
+\layout Subsubsection
+
+Portability issues
+\layout Standard
+
+The libraries have been compiled using egcs release 1.0.3-1.1.3.
+ Some of the parts of the libraries do not work with gcc (at least version
+ 2.7.2.3 and earlier), mostly because of bugs and limitations in gcc, especially
+ with templates and exceptions.
+ The libraries have been compiled under Solaris 2.5 and Linux-2.1.36, using
+ glibc-2.0.5 and up.
+\layout Subsubsection
+
+History
+\layout Standard
+
+The 
+\noun on 
+Inanna
+\noun toggle 
+ library was constructed primarily in order to conduct the experiments for
+ my master's thesis 
+\begin_inset LatexCommand \cite{gronroos:98}
+
+\end_inset 
+
+, as a part of the 
+\noun on 
+Annalee
+\noun toggle 
+ library that implements evolutionary learning of artificial neural networks.
+ As such, the library is extremely experimental and tested mostly just for
+ the purposes required by the thesis.
+ It does, however, contain many developmental extensions and functionalities
+ that surpass the requirements of the thesis.
+ 
+\noun on 
+Inanna
+\noun toggle 
+ has been used for experiments in the Countess (Computational Intelligence
+ for Business) project at Åbo Akademi.
+ Some parts of 
+\noun on 
+Inanna
+\noun toggle 
+ were coded in 1993 as an assignment of a course in neural networks.
+ The 
+\noun on 
+MagiClib
+\noun toggle 
+ has been slowly built since about 1989 as a personal programming toolbox,
+ mostly during commercial software development.
+ None of the libraries have been used by other persons than myself, so they
+ should be considered to be very alpha.
+\layout Subsubsection
+
+Other
+\layout Standard
+
+The name 
+\noun on 
+Inanna
+\noun toggle 
+ might refer to 
+\begin_inset Quotes eld
+\end_inset 
+
+Indigenous Artificial Neural Network A-something
+\begin_inset Quotes erd
+\end_inset 
+
+ (Architecture?), but actually the name comes from an ancient sumerian mother-go
+ddess, whose name just happened to contain the critical letters ANN.
+ Unfortunately, she has nothing to do with neural networks nor learning.
+\layout Standard
+
+As the library has not yet reached a release status, the name should be
+ considered as a work name.
+\layout Standard
+
+
+\begin_inset LatexCommand \BibTeX{/home/magi/texts/bib/magibib}
+
+\end_inset 
+
+
+\the_end
