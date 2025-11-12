@@ -19,6 +19,6 @@ Then, you can run `make` to compile both MagiCLib++ and `libinanna`.
 
 ## Projects
 
-Under the `extras`, there are applications using the library.
+Under the `projects`, there are applications using the library.
 
 * `prediction` for making time series predictions

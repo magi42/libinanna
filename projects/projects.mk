@@ -1,7 +1,7 @@
 ################################################################################
 #    This file is part of the MagiC++ library.                                 #
 #                                                                              #
-#    Copyright (C) 2004 Marko Grönroos <magi@iki.fi>                           #
+#    Copyright (C) 2004 Marko Grï¿½nroos <magi@iki.fi>                           #
 #                                                                              #
 ################################################################################
 #                                                                              #
@@ -30,8 +30,8 @@ export SRCDIR ?= ../..
 ################################################################################
 # Define module name and compilation type
 ################################################################################
-modname = extras
-modpath = libinanna/extras
+modname = projects
+modpath = libinanna/projects
 
 ################################################################################
 # Include build framework
