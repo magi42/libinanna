@@ -242,7 +242,7 @@ void ANNetwork::connectFullFfw (
 	ASSERT (mTopology);
 	ANNLayering* mpLayering = dynamic_cast<ANNLayering*>(mTopology);
 	if (!mpLayering)
-		throw runtime_error (i18n("Neural network didn't have a topology when doing connectFullFfw()"));
+		throw MagiC::runtime_error (i18n("Neural network didn't have a topology when doing connectFullFfw()"));
 
 	// Index of the first unit of previous layer
 	for (int l=1; l<mpLayering->layers(); l++) {

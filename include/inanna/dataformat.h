@@ -1,5 +1,5 @@
 /***************************************************************************
-    copyright            : (C) 2000 by Marko Grönroos
+    copyright            : (C) 2000 by Marko Grï¿½nroos
     email                : magi@iki.fi
  ***************************************************************************/
 
@@ -36,14 +36,14 @@ EXCEPTIONCLASS (invalid_filename);
  **/
 class DataFormatLib {
   public:
-	static void		load	(const String& filename, PatternSet& set) throw (file_not_found, invalid_format, assertion_failed);
-	static void		load	(TextIStream& in, PatternSet& set, const String& filetype=".raw") throw (invalid_format, assertion_failed);
-	
+	static void		load	(const String& filename, PatternSet& set);
+	static void		load	(TextIStream& in, PatternSet& set, const String& filetype=".raw");
+
 	/** Tries to load the given file to the given pattern set.
 	 *
 	 *  @throws file_not_found, invalid_format, assertion_failed
 	 **/
-	static void		save	(const String& filename, const PatternSet& set) throw (invalid_filename);
+	static void		save	(const String& filename, const PatternSet& set);
 
   protected:
 	/** Factory creates a data format handler according to

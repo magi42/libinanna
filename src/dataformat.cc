@@ -1,7 +1,7 @@
 /***************************************************************************
  *   This file is part of the Inanna library.                              *
  *                                                                         *
- *   Copyright (C) 1997-2002 Marko Grönroos <magi@iki.fi>                  *
+ *   Copyright (C) 1997-2002 Marko Grï¿½nroos <magi@iki.fi>                  *
  *                                                                         *
  ***************************************************************************
  *                                                                         *
@@ -44,7 +44,6 @@
  * @throws file_not_found, invalid_format, assertion_failed
  ******************************************************************************/
 void DataFormatLib::load (const String& filename, PatternSet& set)
-	throw (file_not_found, invalid_format, assertion_failed)
 {
 	ASSERTWITH (!isempty(filename), "Filename required (was empty)");
 
@@ -78,7 +77,6 @@ void DataFormatLib::load (
 	TextIStream&  in,              /**< Input stream                          */
 	PatternSet&   set,             /**< Pattern set to load.                  */
 	const String& filetype         /**< File name extension; ".raw",".pat" (SNNS), or ".dt" (Proben1) */)
-	throw (invalid_format, assertion_failed)
 {
 	DataFormat* handler = create (filetype);
 	try {
@@ -90,7 +88,7 @@ void DataFormatLib::load (
 	delete handler;
 }
 
-void DataFormatLib::save (const String& filename, const PatternSet& set) throw (invalid_filename) {
+void DataFormatLib::save (const String& filename, const PatternSet& set) {
 	FILE* out=stdout;
 	if (filename!="-" && !filename.isEmpty())
 		out = fopen (filename, "w");
@@ -121,4 +119,3 @@ DataFormat* DataFormatLib::create (const String& filename) {
 	else
 		return new RawDataFormat ();
 }
-
